@@ -1,3 +1,3 @@
-obj = Bokk.title()
+obj = Bokk.title
 obj.title = "Nineteen Eighty-Four"
 # Nineteen Eighty-Four     
