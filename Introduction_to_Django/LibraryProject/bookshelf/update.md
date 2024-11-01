@@ -1,5 +1,5 @@
 from bookshelf.models import Book
-obj = Book.objects.get(title="1984")
-obj.title = "Nineteen Eighty-Four"
-obj.save()
+book = Book.objects.get(title="1984")
+book.title = "Nineteen Eighty-Four"
+book.save()
 # Nineteen Eighty-Four     
