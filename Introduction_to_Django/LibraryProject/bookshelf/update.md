@@ -1,3 +1,2 @@
-obj = Book.objects.title()
-obj.title = 'Nineteen Eighty-Four'
+Book.title = Nineteen Eighty-Four
 # Nineteen Eighty-Four     
