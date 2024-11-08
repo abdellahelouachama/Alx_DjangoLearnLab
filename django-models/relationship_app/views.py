@@ -18,8 +18,7 @@ class LibraryDetailView(ListView):
     model = Library
     template_name = "relationship_app/library_detail.html.html"
 
-class register(CreateView): 
-    form_class = UserCreationForm
+class register(UserCreationForm): 
     model = User
     success_url = reverse_lazy('login')
     template_name = 'relationship_app/register.html'
