@@ -10,7 +10,7 @@ def list_books(request):
     }
     return render(request, "relationship_app/list_books.html.html", context)
 
-class LibraryDetail(ListView):
+class LibraryDetailView(ListView):
     model = Library
     template_name = "relationship_app/library_detail.html.html"
 
