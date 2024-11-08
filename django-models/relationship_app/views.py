@@ -8,28 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import permission_required
 
-# Setup User Authentication Views
-def register(request):
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect("index")
-    else:
-        form = UserCreationForm()
-    return render(request, "relationship_app/register.html", {"form": form})
 
-class CustomLoginView(LoginView):
-    template_name = "login.html"
-
-class CustomLogoutView(LogoutView):
-    template_name = "logout.html"
-
-def index(request):
-    return render(request, "index.html")
-
-# Setting Up Role-Based Views
 # Check if user is Admin
 def is_admin(user):
     return user.userprofile.role == 'Admin'
