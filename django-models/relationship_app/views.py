@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView
 from .models import Library, Book
@@ -18,8 +18,13 @@ class LibraryDetailView(ListView):
     model = Library
     template_name = "relationship_app/library_detail.html.html"
 
-class register(UserCreationForm): 
-    model = User
-    success_url = reverse_lazy('login')
-    template_name = 'relationship_app/register.html'
-
+def register(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect ("index")
+    else:
+        form = UserCreationForm()
+    return render(request, "relationship_app/register.html", {"form": form})
