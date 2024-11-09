@@ -35,8 +35,8 @@ def register(request):
     return render(request, 'registration/register.html', {'form': form})
 
 
-class CustomLoginView(LoginView):
-    template_name = 'registration/login.html'
-class CustomLogoutView(LogoutView):
-    template_name = 'registration/logout.html'   
-    Seccess_url = reverse_lazy('login') 
+# class CustomLoginView(LoginView):
+#     template_name = 'registration/login.html'
+# class CustomLogoutView(LogoutView):
+#     template_name = 'registration/logout.html'   
+#     Seccess_url = reverse_lazy('login') 
