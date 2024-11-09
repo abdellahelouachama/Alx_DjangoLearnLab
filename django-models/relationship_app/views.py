@@ -21,6 +21,7 @@ from django.shortcuts import render, redirect
 #         return render(request, 'relationship_app/library_detail.html', context)
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth import login, logout
 from django.urls import reverse_lazy    
 
 def register(request):
