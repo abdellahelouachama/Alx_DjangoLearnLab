@@ -45,15 +45,15 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 
 
 def is_admin(request):
-    return request.user.UserProfile.filter (role='Admin')
+    return request.user.UserProfile.role == 'Admin'
 
 # @login_required(login_url='login')
 @user_passes_test(is_admin)
 def Admin(request):
-    return render(request, 'relationship_app/admin_view.html')
+    return render(request, 'admin_view.html')
 
 def is_librarian(request):
-    return request.user.UserProfile.role == 'Librarian'
+    return request.user.UserProfile.role == 'Librarians'
 
 @login_required(login_url='login')
 @user_passes_test(is_librarian)
