@@ -50,7 +50,7 @@ def is_admin(request):
 @login_required(login_url='login')
 @user_passes_test(is_admin)
 def admin_view(request):
-    return render(request, 'relationship_app/admin_view.html')
+    return render(request, 'admin_view.py')
 
 def is_librarian(request):
     return request.user.role == 'Librarian'
