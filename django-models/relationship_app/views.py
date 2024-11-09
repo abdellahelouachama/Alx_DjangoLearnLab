@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView
-from models import Book, Library
+from .models import Book, Library
 
 # Create your views here
 def list_books_view(request):
