@@ -45,7 +45,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 
 
 def is_admin(request):
-    return request.user.role == 'Admin'
+    return request.user.UserProfile.role == 'Admin'
 
 # @login_required(login_url='login')
 @user_passes_test(is_admin)
@@ -53,7 +53,7 @@ def Admin(request):
     return render(request, 'relationship_app/admin_view.html')
 
 def is_librarian(request):
-    return request.user.role == 'Librarian'
+    return request.user.UserProfile.role == 'Librarian'
 
 @login_required(login_url='login')
 @user_passes_test(is_librarian)
@@ -61,7 +61,7 @@ def Librarian(request):
     return render(request, 'relationship_app/librarian_view.html')
 
 def is_member(request):
-    return request.user.role == 'Member'
+    return request.user.UserProfile.role == 'Member'
 
 @login_required(login_url='login')
 @user_passes_test(is_member)
