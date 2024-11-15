@@ -15,7 +15,7 @@ class CustomLoginView(LoginView):
 
 @login_required
 @permission_required('bookshelf.can_view_book')
-def view(request):
+def book_list(request):
     books = Book.objects.all()
     context = {
         'books': books
