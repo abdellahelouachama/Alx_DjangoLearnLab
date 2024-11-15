@@ -10,7 +10,7 @@ class BookAdmin(admin.ModelAdmin):
 
 admin.site.register(Book, BookAdmin)
 
-class ModelAdmin(UserAdmin):
+class CustomUserAdmin(UserAdmin):
     fieldsets = UserAdmin.fieldsets + (
         ('Custom Fields', {'fields': ('date_of_birth', 'profile_photo')}),
     )
@@ -20,4 +20,4 @@ class ModelAdmin(UserAdmin):
 
     list_display = ['date_of_birth', 'profile_photo']
 
-admin.site.register(ModelAdmin, CustomUser) 
+admin.site.register(CustomUserAdmin, CustomUser) 
