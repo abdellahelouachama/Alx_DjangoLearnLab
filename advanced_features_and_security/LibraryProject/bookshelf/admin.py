@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Book
 from django.contrib.auth.admin import UserAdmin
-from .models import User
+from .models import CustomUser
 # Register your models here.
 
 class BookAdmin(admin.ModelAdmin):
@@ -20,4 +20,4 @@ class ModelAdmin(UserAdmin):
 
     list_display = ['date_of_birth', 'profile_photo']
 
-admin.site.register(ModelAdmin, User) 
+admin.site.register(ModelAdmin, CustomUser) 

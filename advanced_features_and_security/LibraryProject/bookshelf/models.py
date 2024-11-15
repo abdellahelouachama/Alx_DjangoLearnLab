@@ -25,7 +25,7 @@ class UserManager(BaseUserManager):
 
 
 
-class User(AbstractUser):
+class CustomUser(AbstractUser):
     date_of_birth = models.DateField(max_length=200)
     profile_photo = models.ImageField()
     is_staff = models.BooleanField(default=False)
