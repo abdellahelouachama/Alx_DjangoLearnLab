@@ -20,4 +20,4 @@ class CustomUserAdmin(UserAdmin):
 
     list_display = ['date_of_birth', 'profile_photo']
 
-admin.site.register(CustomUserAdmin, CustomUser) 
+admin.site.register(CustomUser, CustomUserAdmin) 
