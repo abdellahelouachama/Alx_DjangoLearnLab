@@ -123,11 +123,12 @@ STATIC_URL = 'static/'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# this is for protectionng from clickjacking and cross-site request forgery and so on
+X_FRAME_OPTIONS = 'DENY'
 SECURE_BROWSER_XSS_FILTER = True
-X_FREAME_OPTIONS = 'DENY'
 SECURE_CONTENT_TYPE_NOSNIFF = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-# this is for protectionng from clickjacking and cross-site request forgery and so on
