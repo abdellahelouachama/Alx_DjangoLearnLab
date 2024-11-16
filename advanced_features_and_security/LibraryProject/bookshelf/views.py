@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import permission_required, login_required
 from .models import Book
 from django.views.generic import CreateView, UpdateView
-from .form import BookForm
+from .forms import ExampleForm
 from django.http import HttpResponse
 from django.contrib.auth.views import LoginView
 
@@ -26,7 +26,7 @@ def book_list(request):
 @login_required
 @permission_required('bookshelf.can_create_book', raise_exception=True)
 class CreateBookView(CreateView):
-    form_class = BookForm
+    form_class = ExampleForm
     model = Book
     template_name = 'bookshelf/create_book.html'
 
