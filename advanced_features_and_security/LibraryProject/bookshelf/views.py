@@ -34,7 +34,7 @@ class CreateBookView(CreateView):
 
 @permission_required('bookshelf.can_edit_book', raise_exception=True)
 class EditBookView(UpdateView):
-    form_class = BookForm
+    form_class = ExampleForm
     model = Book
     template_name = 'bookshelf/edit_book.html'
 @login_required

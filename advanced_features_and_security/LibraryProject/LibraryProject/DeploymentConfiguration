@@ -1,0 +1,2 @@
+set up the web server to support https  by setting up SSL/TLS certificates because the application redirct all non-HTTPS requests to HTTPS
+updating your web server configuration (e.g., Apache or Nginx) to include SSL directives and certificate files
