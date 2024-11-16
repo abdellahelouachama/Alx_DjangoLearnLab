@@ -1,2 +1,7 @@
 set up the web server to support https  by setting up SSL/TLS certificates because the application redirct all non-HTTPS requests to HTTPS
 updating your web server configuration (e.g., Apache or Nginx) to include SSL directives and certificate files
+As part of enabling HTTPS and securing your web server setup,
+ensure that the web server (e.g., NGINX) correctly forwards protocol headers to the application.
+This setup ensures the application recognizes secure (HTTPS) requests "
+proxy_set_header X-Forwarded-Proto $scheme"
+
