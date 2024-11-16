@@ -12,7 +12,7 @@ class CustomLoginView(LoginView):
     template_name = 'bookshelf/login.html'
     success_url = 'view'
     
-
+# using orm method to secure the intraction with the database and protect the data againest sql injection
 @login_required
 @permission_required('bookshelf.can_view_book')
 def book_list(request):
@@ -20,8 +20,9 @@ def book_list(request):
     context = {
         'books': books
     }
-    return render(request, 'bookshelf/list_books.html', context)
+    return render(request, 'bookshelf/book_list.html', context)
 
+# using builtin forms to validt data and ensure safe handling of user input to prevent sql injection
 @login_required
 @permission_required('bookshelf.can_create_book', raise_exception=True)
 class CreateBookView(CreateView):
