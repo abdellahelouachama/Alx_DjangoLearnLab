@@ -9,4 +9,4 @@ class Book(models.Model):
     publication_year = models.IntegerField()
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
 
-# Author and Book model created with many-to-many relationship
+# Author and Book are created with one-to-many relationship 
