@@ -12,6 +12,7 @@ class BookTest(APITestCase):
         self.book = Book.objects.create(title='romantic', publication_year='2020', author="karim")
         self.token = Token.objects.create(user=self.user)
         self.client = APIClient()
+        self.client.login(username='ali', password='123')
 
     # Test for BookListView 
     def test_book_list(self):
