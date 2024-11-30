@@ -1,15 +1,21 @@
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework import status
 from .serializers import BookSerializer
 from .models import Book
 
 # ListView to list all books
-class ListView(ListAPIView):
+class BookListView(ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['title', 'author' ,'publication_year']
+    search_fields = ['title', 'author']
+    ordering_fields = ['title', 'publication_year']
 
 # DetailView to retrieve a single book through pk
 class DetailView(RetrieveAPIView):
