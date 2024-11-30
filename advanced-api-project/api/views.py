@@ -1,5 +1,4 @@
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
-from rest_framework import generics
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
@@ -7,7 +6,6 @@ from rest_framework import filters
 from rest_framework import status
 from .serializers import BookSerializer
 from .models import Book
-from django_filters import rest_framework
 
 # ListView to list all books
 class BookListView(ListAPIView):
@@ -29,7 +27,7 @@ class DetailView(RetrieveAPIView):
 class CreateView(CreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    pagination_class = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
         serializer = BookSerializer(data=request.data)
