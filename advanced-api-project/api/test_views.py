@@ -21,13 +21,13 @@ class BookTest(APITestCase):
         # Test for filtering books by title
         response = self.client.get(reverse('books/') + '?title=romantic')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.json()), 1)
-        self.assertEqual(response.json()[0]['title'], 'romantic')
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['title'], 'romantic')
         # Test for searching books by author
         response = self.client.get(reverse('books/') + '?search=karim')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.json()), 1)
-        self.assertEqual(response.json()[0]['author'], 'karim')
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0] ['author'], 'karim')
         # Test for ordering books by publication year
         response = self.client.get(reverse('books/') + '?ordering=publication_year')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -38,7 +38,7 @@ class BookTest(APITestCase):
         url = reverse('books', args=[self.book.id])  # Ensure this matches your detail URL name
         response = self.client.get(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json(), {'title': 'romantic', 'author': 'karim', 'publication_year': '2020'})
+        self.assertEqual(response.data, {'title': 'romantic', 'author': 'karim', 'publication_year': '2020'})
         # Test for non-existent book
         url = reverse('books', args=[100])
         response = self.client.get(url, format='json')
