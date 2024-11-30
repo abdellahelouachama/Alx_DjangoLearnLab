@@ -7,6 +7,7 @@ from rest_framework import filters
 from rest_framework import status
 from .serializers import BookSerializer
 from .models import Book
+from django_filters import rest_framework
 
 # ListView to list all books
 class BookListView(ListAPIView):
