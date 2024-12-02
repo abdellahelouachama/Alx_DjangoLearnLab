@@ -1,32 +1,19 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="{% url 'register' %}">Register</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <div class="content">
-        <h2>Login</h2>
-
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.as_p }}  <!-- Render the form -->
-            <button type="submit">Login</button>
-        </form>
-    </div>
-
-    <footer>
-        <p>Blog Project</p>
-    </footer>
+    <h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
+    {% if form.errors %}
+        <p>There was an error with your login credentials.</p>
+    {% endif %}
 </body>
 </html>
