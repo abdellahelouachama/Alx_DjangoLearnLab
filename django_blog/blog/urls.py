@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     # Login view
-    path('login/', auth_views.LoginView.as_view(template_name='/login.html'), name='login'),
+    path('login/', auth_views.LoginView.as_view(template_name='blog/login.html'), name='login'),
     # Logout view (it will automatically redirect to home page or can be specified)
     path('logout/', auth_views.LogoutView.as_view(next_page='/'), name='logout'),
     # Register view (uses your custom registration view)

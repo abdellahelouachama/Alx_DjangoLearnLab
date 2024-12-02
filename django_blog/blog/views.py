@@ -25,7 +25,7 @@ Returns:
             return redirect('/login')
     else:
         form = CustomUserCreationForm()
-    return render(request, 'register.html', {'form':form})    
+    return render(request, 'blog/register.html', {'form':form})    
 
 @login_required
 def profile(request):
@@ -56,4 +56,4 @@ def profile(request):
     else:
         form = CustomUserChangeForm(instance=user)  # Render the form with current user data
 
-    return render(request, 'profile.html', {'form': form})
+    return render(request, 'blog/profile.html', {'form': form})
