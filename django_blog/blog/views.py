@@ -1,10 +1,6 @@
-from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic import UpdateView
-from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.decorators import login_required
-from .models import CustomUser
 
  
 def register(request):
@@ -31,20 +27,7 @@ Returns:
         form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form':form})    
 
-
-class LoginView(LoginView):
-    """
-Handles user login by displaying and processing a login form. 
-    """
-    template_name = 'registration/login.html'
-    form_class = AuthenticationForm  
-
-class LogoutView(LogoutView):
-    """
-Handles user logout by destroying the user's session.
-    """
-    template_name = 'registration/logout.html'
-    next_page = '/login'
+ 
 
 @login_required
 def profile(request):
