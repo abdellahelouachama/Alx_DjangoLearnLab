@@ -78,10 +78,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-        'USER': 'abdellah',
-        'PASSWORD': 'Doulingo2023@',
-        'HOST': 'localhost',  # or the server IP address
-        'PORT': '3306',
+        'USER': 'username',
+        'PASSWORD': 'password',
+        'PORT': '5432'
+        
     }
 }
 
