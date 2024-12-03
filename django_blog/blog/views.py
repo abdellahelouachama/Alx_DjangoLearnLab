@@ -62,6 +62,18 @@ def profile(request):
 
 # home view for displaying the menu
 def home(request):
+    """
+Renders the home page of the blog application.
+
+This view function handles the HTTP request for the home page and returns an 
+HttpResponse object that renders the 'home.html' template.
+
+Args:
+    request: The HTTP request object.
+
+Returns:
+    HttpResponse: Renders the home page template.
+     """
     return render(request, 'blog/home.html')
 # Plog post views
 class ListView(ListView):

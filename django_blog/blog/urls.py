@@ -18,9 +18,9 @@ urlpatterns = [
     # Detail post view
     path('posts/<int:pk>/', views.DetailView, name='post-detail'),
     # Create post view
-    path('posts/new/ ', views.CreatView, name='post-create'),
+    path('post/new/ ', views.CreatView, name='post-create'),
     # Edit post view
-    path('posts/<int:pk>/edit/', views.UpdateView, name='post-edit'),
+    path('post/<int:pk>/update/', views.UpdateView, name='post-edit'),
     # Delete post view
-    path('posts/<int:pk>/delete/', views.DeleteView, name='post-delete'),
+    path('post/<int:pk>/delete/', views.DeleteView, name='post-delete'),
 ]
