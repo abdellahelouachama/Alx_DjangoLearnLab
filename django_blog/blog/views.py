@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, 
 from .forms import CustomUserCreationForm, CustomUserChangeForm, PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from .models import Post, Comment
+from django.urls import reverse_lazy
 # Authentication views  
 def register(request):
     """
@@ -76,14 +77,17 @@ Returns:
      """
     return render(request, 'blog/home.html')
 # Plog post views
+# view to list all posts
 class ListView(ListView):
     model = Post
     template_name = 'blog/list.html'
 
+# view to display a single post
 class DetailView(DetailView):
     model = Post
     template_name = 'blog/detail.html'
 
+# view to create a new post
 @login_required
 class CreatView(CreateView):
     model = Post
@@ -92,10 +96,23 @@ class CreatView(CreateView):
     success_url = 'home'
 
     def form_valid(self, form):
+        """
+        Ensures that the post's author is set to the logged-in user when saving the form.
+
+        This method is called when the form is valid and is used to override the default behavior
+        of the CreateView. It sets the post's author to the logged-in user and then calls the
+        parent class's form_valid method to save the form.
+
+        Args:
+            form: The form object that is being validated.
+
+        Returns:
+            HttpResponse: The response object that is returned by the parent class's form_valid method.
+        """
         form.instance.author = self.request.user
         return super().form_valid(form)
 
-
+# view to update a post
 class UpdateView(UpdateView, UserPassesTestMixin, LoginRequiredMixin):
     model = Post
     template_name = 'blog/update.html'
@@ -103,9 +120,20 @@ class UpdateView(UpdateView, UserPassesTestMixin, LoginRequiredMixin):
     success_url = 'home'
 
     def test_func(self):
+        """
+        Checks if the current user is the author of the post to be updated.
+
+        This method is called by the UpdateView to ensure that the user attempting to update
+        the post is the same user who created it. If the user is not the author, the view will
+        redirect to the login page.
+
+        Returns:
+            boolean: Whether the user is authorized to update the post.
+        """
         post = self.get_object()
         return self.request.user == post.author
 
+# view to delete a post
 class DeleteView(DeleteView, UserPassesTestMixin, LoginRequiredMixin):
     model = Post
     template_name = 'blog/delete.html'
@@ -131,6 +159,18 @@ class CreatViewComment(CreateView):
 
     def form_valid(self, form):
         # Extract post_id from the URL
+        """
+        Ensures that the comment is associated with the logged-in user and the post
+        specified in the URL.
+
+        This method is called when the form is valid and is used to override the default behavior
+        of the CreateView. It extracts the post_id from the URL, gets the post instance, and
+        sets the comment's author and post fields. Then it calls the parent class's form_valid method
+        to save the form.
+
+        Returns:
+            HttpResponse: The response object that is returned by the parent class's form_valid method.
+        """
         post_id = self.kwargs['post_id']
         # Get the post instance
         post = get_object_or_404(Post, id=post_id)
@@ -138,8 +178,13 @@ class CreatViewComment(CreateView):
         form.instance.author = self.request.user
         form.instance.post = post
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['post'] = get_object_or_404(Post, id=self.kwargs['post_id'])
+        return context
 
-# update comment 
+# view to update comment 
 class UpdateViewComment(UpdateView, UserPassesTestMixin, LoginRequiredMixin):    
     model = Comment
     template_name = 'blog/comment_update.html'
@@ -149,11 +194,23 @@ class UpdateViewComment(UpdateView, UserPassesTestMixin, LoginRequiredMixin):
         comment = self.get_object()
         return self.request.user == comment.author
 
-# delete comment
+# view to delete comment
 class DeleteViewComment(UpdateView, UserPassesTestMixin, LoginRequiredMixin):
     model = Comment
-    template_name = 'blog/comment_update.html'
+    template_name = 'blog/comment_delete.html'
     
     def test_func(self):
         comment = self.get_object()
         return self.request.user == comment.author
+
+    def get_success_url(self):
+        """
+        Returns the URL to redirect to after successfully deleting the comment.
+
+        The URL is the 'posts' page with the post_id as a parameter.
+
+        Returns:
+            str: The URL to redirect to.
+        """
+        post_id = self.kwargs['post_id']
+        return reverse_lazy('posts', args=[post_id])
