@@ -30,7 +30,7 @@ urlpatterns += [
     # List comments view url
     path('post/<int:pk>/comments/', views.ListViewComment, name='comment-list'),
     # Detail comment view url
-    path('post/<int:pk>/comment/new/', views.CommentCreateView, name='comment-create'),
+    path('post/<int:pk>/comments/new/', views.CommentCreateView, name='comment-create'),
     # Update comment view url
     path('post/<int:pk>/comment/<int:pk>/update/', views.CommentUpdateView, name='comment-update'),
     # Delete comment view url
