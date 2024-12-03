@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Details</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<header>
+    <nav>
+        <ul>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'posts' %}">Posts</a></li>
+                <li><a href="{% url 'posts/new' %}">Create Post</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+            {% else %}
+                <li><a href="{% url 'posts' %}">Posts</a></li>
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'register' %}">Register</a></li>
+        </ul>
+    </nav>
+</header>
+
+<div class="content">
+    <h1>{{ post.title }}</h1>
+    <p><strong>Author:</strong> {{ post.author.username }}</p>
+    <p><strong>Published on:</strong> {{ post.created_at }}</p>
+
+    <div class="post-content">
+        <p>{{ post.content }}</p> <!-- Full content of the post -->
+    </div>
+
+    <a href="{% url 'posts' %}">Back to Posts</a> <!-- Link to go back to the post list -->
+</div>
+
+<footer>
+    <p>&copy; 2024 Blog Website</p>
+</footer>
+
+</body>
+</html>

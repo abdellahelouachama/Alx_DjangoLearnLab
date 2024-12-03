@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'posts' %}">Posts</a></li>
+                <li><a href="{% url 'posts' pk=1 %}">Post Details</a></li>
+                <li><a href="{% url 'post/new' %}">Create Post</a></li>
+                <li><a href="{% url 'posts/edit' pk=1 %}">Edit Post</a></li>
+                <li><a href="{% url 'posts/delete' pk=1 %}">Delete Post</a></li>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% else %}
+                <li><a href="{% url 'posts' %}">Posts</a></li>
+                <li><a href="{% url 'posts' pk=1 %}">Post Details</a></li>
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'register' %}">Register</a></li>
+
+            </ul>
+        </nav>
+    </header>
+
+
+    <div class="content">
+        <h1>Welcome to the Blog</h1>
+        <p>Explore posts, create your own, and manage your content seamlessly!</p>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Blog Application. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
