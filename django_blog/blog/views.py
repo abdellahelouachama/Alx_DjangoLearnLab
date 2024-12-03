@@ -152,7 +152,7 @@ class ListViewComment(ListView):
 
 # view to create comment under post
 @login_required
-class CreatViewComment(CreateView):
+class CommentCreateView(CreateView):
     model = Comment
     template_name = 'blog/comment_create.html'
     form_class = CommentForm
@@ -185,7 +185,7 @@ class CreatViewComment(CreateView):
         return context
 
 # view to update comment 
-class UpdateViewComment(UpdateView, UserPassesTestMixin, LoginRequiredMixin):    
+class CommentUpdateView(UpdateView, UserPassesTestMixin, LoginRequiredMixin):    
     model = Comment
     template_name = 'blog/comment_update.html'
     form_class = CommentForm
@@ -195,7 +195,7 @@ class UpdateViewComment(UpdateView, UserPassesTestMixin, LoginRequiredMixin):
         return self.request.user == comment.author
 
 # view to delete comment
-class DeleteViewComment(UpdateView, UserPassesTestMixin, LoginRequiredMixin):
+class CommentDeleteView(UpdateView, UserPassesTestMixin, LoginRequiredMixin):
     model = Comment
     template_name = 'blog/comment_delete.html'
     
