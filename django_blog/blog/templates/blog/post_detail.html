@@ -19,6 +19,7 @@
                 <li><a href="{% url 'posts' %}">Posts</a></li>
                 <li><a href="{% url 'login' %}">Login</a></li>
                 <li><a href="{% url 'register' %}">Register</a></li>
+            {% endif %}
         </ul>
     </nav>
 </header>
@@ -33,6 +34,32 @@
     </div>
 
     <a href="{% url 'posts' %}">Back to Posts</a> <!-- Link to go back to the post list -->
+
+    <!-- Comment Actions Section -->
+    <div class="comments-section">
+        <h2>Comments</h2>
+        <!-- Link to List All Comments -->
+        <a href="{% url 'comments' post.id %}">View All Comments</a>
+
+        {% if user.is_authenticated %}
+            <!-- Link to Create a New Comment -->
+            <a href="{% url 'comment/create' post.id %}">Add a Comment</a>
+
+            <!-- Existing Comments with Action Links -->
+            {% for comment in post.comments.all %}
+                <div class="comment">
+                    <p><strong>{{ comment.author.username }}</strong>: {{ comment.content }}</p>
+                    <p><small>Posted on {{ comment.created_at }}</small></p>
+
+                    <!-- Links for Comment Actions -->
+                    <a href="{% url 'comment/update' post.id comment.id %}">Edit</a>
+                    <a href="{% url 'comment/delete' post.id comment.id %}">Delete</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>You must be logged in to add or manage comments.</p>
+        {% endif %}
+    </div>
 </div>
 
 <footer>

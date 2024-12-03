@@ -8,8 +8,14 @@ class CustomUser(AbstractUser):
     bio = models.TextField(blank=True)
 
 class Post(models.Model):
-    title = models.CharField(max_length=200, required=True)
-    content = models.TextField(required=True, blank=False)
+    title = models.CharField(max_length=200)
+    content = models.TextField(blank=False)
     published_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='posts')
 
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    content = models.TextField(blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

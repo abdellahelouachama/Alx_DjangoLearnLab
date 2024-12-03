@@ -24,3 +24,15 @@ urlpatterns = [
     # Delete post view
     path('post/<int:pk>/delete/', views.DeleteView, name='post-delete'),
 ]
+
+# Comment URL patterns
+urlpatterns += [
+    # List comments view url
+    path('post/<int:pk>/comments/', views.ListViewComment, name='comment-list'),
+    # Detail comment view url
+    path('post/<int:pk>/comments/create/', views.CreatViewComment, name='comment-create'),
+    # Update comment view url
+    path('post/<int:pk>/comments/<int:comment_pk>/update/', views.UpdateViewComment, name='comment-update'),
+    # Delete comment view url
+    path('post/<int:pk>/comments/<int:comment_pk>/delete/', views.DeleteViewComment, name='comment-delete'),
+]
