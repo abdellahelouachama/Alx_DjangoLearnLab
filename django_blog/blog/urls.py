@@ -47,5 +47,5 @@ urlpatterns += [
     # search view url
     path('posts/search/', views.search_view, name='search'),
     # tags view url
-    path('/tags/<tag_name>/', views.tag, name='tag'),
+    path('/tags/<tag_name>/', views.filter_posts_by_tag, name='tag'),
 ]
