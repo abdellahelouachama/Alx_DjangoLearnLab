@@ -286,20 +286,21 @@ def search_view(request):
             results = Post.objects.filter(tags__name__icontains=query)
 
         return render(request, 'blog/search_result.html', {'results': results, 'query': query})    
+class PostByTagListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html'
 
-def filter_posts_by_tag(request):
-    """
-    Handles the filtering of posts by a specific tag.
+    def get_queryset(self):
+        """
+        Returns a queryset of posts filtered by the tag name from the URL kwargs.
 
-    Given a tag name, this view filters the posts by the specified tag and
-    renders the post list page with the filtered posts.
+        Args:
+            self (PostByTagListView): The view instance.
 
-    Args:
-        request (HttpRequest): The request object.
+        Returns:
+            QuerySet: A queryset of posts filtered by the tag name.
+        """
+        tag_name = self.kwargs['tag_name']
+        return Post.objects.filter(tags__name=tag_name)
 
-    Returns:
-        HttpResponse: The response object that is rendered with the filtered posts.
-    """
-    tag = request.kwargs['tag']
-    posts = Post.objects.filter(tags__contains=tag)
-    return render(request, 'blog/post_list.html', {'posts': posts})
+  
