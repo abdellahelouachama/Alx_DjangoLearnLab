@@ -283,7 +283,7 @@ def search_view(request):
         elif field == 'content':
             results = Post.objects.filter(content__icontains=query)
         elif field == 'tags':
-            results = Post.objects.filter(tags__icontains=query)
+            results = Post.objects.filter(tags__name__icontains=query)
 
         return render(request, 'blog/search_result.html', {'results': results, 'query': query})    
 
