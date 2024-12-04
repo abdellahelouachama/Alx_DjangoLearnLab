@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect, get_object_or_404, 
 from .forms import CustomUserCreationForm, CustomUserChangeForm, PostForm, CommentForm
-from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
-from .models import Post, Comment
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
+from .models import Post, Comment, Tag
+
 # Authentication views  
 def register(request):
     """
@@ -91,26 +92,68 @@ class DetailView(DetailView):
 @login_required
 class CreatView(CreateView):
     model = Post
-    template_name = 'blog/create.html'
     form_class = PostForm
-    success_url = 'home'
+    template_name = 'post_form.html'
+    success_url = reverse_lazy('post_list')  # Replace with your actual success URL
 
     def form_valid(self, form):
+        # Save the post instance first
         """
-        Ensures that the post's author is set to the logged-in user when saving the form.
+        Saves the post instance and associates tags with the post.
 
         This method is called when the form is valid and is used to override the default behavior
-        of the CreateView. It sets the post's author to the logged-in user and then calls the
-        parent class's form_valid method to save the form.
-
-        Args:
-            form: The form object that is being validated.
+        of the CreateView. It saves the post instance, and then handles the tags by splitting the
+        input string into individual tag names, creating each tag if it does not exist, and
+        associating each tag with the post.
 
         Returns:
             HttpResponse: The response object that is returned by the parent class's form_valid method.
         """
-        form.instance.author = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+        self.object.save()  # Save the post instance to get a PK
+
+        # Handle tags
+        tags_input = form.cleaned_data['tags']
+        if tags_input:
+            tag_names = [tag.strip() for tag in tags_input.split(',')]
+            for tag_name in tag_names:
+                tag, created = Tag.objects.get_or_create(name=tag_name)
+                self.object.tags.add(tag)  # Associate tags with the post
+
+        return response
+
+class PostUpdateView(UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'post_form.html'
+    success_url = reverse_lazy('post_list')  # Replace with your actual success URL
+
+    def form_valid(self, form):
+        # Save the post instance first
+        """
+        Saves the post instance and updates tags associated with the post.
+
+        This method is called when the form is valid and is used to override the default behavior
+        of the UpdateView. It saves the post instance, clears existing tags, and then handles the
+        tags by splitting the input string into individual tag names, creating each tag if it does
+        not exist, and associating each tag with the post.
+
+        Returns:
+            HttpResponse: The response object that is returned by the parent class's form_valid method.
+        """
+        
+        response = super().form_valid(form)
+
+        # Handle tags
+        self.object.tags.clear()  # Clear existing tags
+        tags_input = form.cleaned_data['tags']
+        if tags_input:
+            tag_names = [tag.strip() for tag in tags_input.split(',')]
+            for tag_name in tag_names:
+                tag, created = Tag.objects.get_or_create(name=tag_name)
+                self.object.tags.add(tag)  # Associate tags with the post
+
+        return response
 
 # view to update a post
 class UpdateView(UpdateView, UserPassesTestMixin, LoginRequiredMixin):
@@ -142,7 +185,6 @@ class DeleteView(DeleteView, UserPassesTestMixin, LoginRequiredMixin):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author
-       
     
 # comment views for crud operations
 # view to list all comments
@@ -214,3 +256,50 @@ class CommentDeleteView(UpdateView, UserPassesTestMixin, LoginRequiredMixin):
         """
         post_id = self.kwargs['post_id']
         return reverse_lazy('posts', args=[post_id])
+
+def search_view(request):
+    """
+    Handles the search feature by rendering a page with search results.
+
+    Given a query string and a field name, this view filters the posts by the
+    query string and the specified field. The results are then rendered in a
+    template with the query string as a parameter.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object that is rendered with the search results.
+    """
+    query = request.GET.get('q', '')
+    field = request.GET.get('field', 'title')  # Default to 'title'
+
+    # Start with an empty queryset
+    results = Post.objects.none()
+
+    if query:
+        if field == 'title':
+            results = Post.objects.filter(title__icontains=query)
+        elif field == 'content':
+            results = Post.objects.filter(content__icontains=query)
+        elif field == 'tags':
+            results = Post.objects.filter(tags__icontains=query)
+
+        return render(request, 'blog/search_result.html', {'results': results, 'query': query})    
+
+def filter_posts_by_tag(request):
+    """
+    Handles the filtering of posts by a specific tag.
+
+    Given a tag name, this view filters the posts by the specified tag and
+    renders the post list page with the filtered posts.
+
+    Args:
+        request (HttpRequest): The request object.
+
+    Returns:
+        HttpResponse: The response object that is rendered with the filtered posts.
+    """
+    tag = request.kwargs['tag']
+    posts = Post.objects.filter(tags__contains=tag)
+    return render(request, 'blog/post_list.html', {'posts': posts})

@@ -24,7 +24,15 @@
         </ul>
     </nav>
 </header>
-
+<form method="get" action="{% url 'search' %}">
+    <select name="field">
+        <option value="title">Title</option>
+        <option value="content">Content</option>
+        <option value="tags">Tags</option>
+    </select>
+    <input type="text" name="q" placeholder="Enter your search" required>
+    <button type="submit">Search</button>
+</form>
 
 
 <div class="content">
