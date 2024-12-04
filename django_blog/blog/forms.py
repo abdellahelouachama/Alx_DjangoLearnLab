@@ -16,13 +16,12 @@ class CustomUserChangeForm(UserChangeForm):
         model = CustomUser
         fields = ('username', 'email', 'picture', 'bio')       
 class PostForm(forms.ModelForm):
-    tags = forms.CharField(
-        widget=TagWidget(attrs={'placeholder': 'Add tags, separated by commas'})
-    )  # Use TagWidget here
-
     class Meta:
         model = Post
         fields = ['title', 'content', 'tags']
+        widgets = {
+            'tags': TagWidget(),
+        }
 
 class CommentForm(forms.ModelForm):
     class Meta:
