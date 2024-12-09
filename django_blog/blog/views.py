@@ -257,6 +257,7 @@ class CommentDeleteView(UpdateView, UserPassesTestMixin, LoginRequiredMixin):
         post_id = self.kwargs['post_id']
         return reverse_lazy('posts', args=[post_id])
 
+# view to implement search and tags functionalities
 def search_view(request):
     """
     Handles the search feature by rendering a page with search results.
