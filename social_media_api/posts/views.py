@@ -1,4 +1,4 @@
-from rest_framework.viewsets import ModelViewSet
+from rest_framework import viewsets
 from .serializers import CommentSerializer, PostSerializer
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
@@ -12,7 +12,7 @@ User = get_user_model()
 
 # post viewset to preform crud operations for the post it required authentication 
 # and the the authenticated user to be the auther of the bost for object level actions
-class PostViewSet(ModelViewSet):
+class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated, IsOwner]
@@ -64,7 +64,7 @@ class PostViewSet(ModelViewSet):
 
 # comment viewset to preform crud operations for the post it required authentication and 
 # the the authenticated user to be the auther od comment for object level actions
-class CommentViewSet(ModelViewSet):
+class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated, IsOwner]
