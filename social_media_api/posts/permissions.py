@@ -1,7 +1,7 @@
 from rest_framework.permissions import BasePermission
 
 # custom permission
-class IsOwner(BasePermission):
+class IsAuthor(BasePermission):
     def has_object_permission(self, request, view, obj):
         
         """
@@ -12,4 +12,10 @@ class IsOwner(BasePermission):
         :param obj: The object to check permission against
         :return: True if permission is granted, False otherwise
         """
-        return request.user == obj.author
+        if request.method in ['PUT', 'DELETE', 'PATCH']:
+            if request.user == obj.author:
+                return True
+            else:
+                return False
+        return True    
+             

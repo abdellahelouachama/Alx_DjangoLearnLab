@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Comment, Post
 from rest_framework.decorators import action
-from .permissions import IsOwner
+from .permissions import IsAuthor
 from rest_framework.filters import SearchFilter
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -16,7 +16,7 @@ User = get_user_model()
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    permission_classes = [permissions.IsAuthenticated, IsAuthor]
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['title', 'content']
     search_fields = ['title', 'content']
@@ -62,7 +62,7 @@ class PostViewSet(viewsets.ModelViewSet):
         
         return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
     
-    @action(methods=['GET'], detail=False, url_path='feed')
+    @action(methods=['GET'], detail=False, url_path='feed/')
     def feed(self, request):
         """
         Retrieve and return posts from users that the authenticated user follows.
@@ -92,7 +92,7 @@ class PostViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [permissions.IsAuthenticated, IsOwner]
+    permission_classes = [permissions.IsAuthenticated, IsAuthor]
 
     def get_object(self):
         """

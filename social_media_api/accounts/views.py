@@ -11,6 +11,7 @@ from .permission import IsLoggedIn
 from rest_framework import status
 from .models import CustomUser
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
+from rest_framework.viewsets import GenericViewSet
 User = get_user_model()
 
 # register view to handle user creation
@@ -168,7 +169,7 @@ class UserAPIView(RetrieveUpdateDestroyAPIView):
         instance.delete()
 
 # FollowView handle following and unfollowing custom  operations 
-class FollowView(generics.GenericAPIView):
+class FollowView(GenericViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     lookup_field = 'username'
