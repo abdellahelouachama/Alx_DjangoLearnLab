@@ -12,6 +12,7 @@ from .serializers import UserSerializer
 from .permission import IsLoggedIn
 from rest_framework import status
 from .models import CustomUser
+from rest_framework.generics import RetrieveUpdateDestroyAPIView
 User = get_user_model()
 
 # register view to handle user creation
@@ -120,8 +121,7 @@ class LogoutView(APIView):
 
 # user viewset to handle profile managment(reterive, update, delete)
 # note : user creation handled in RegisterView
-class UserAPIView(GenericViewSet, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
-
+class UserAPIView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated, IsLoggedIn]
