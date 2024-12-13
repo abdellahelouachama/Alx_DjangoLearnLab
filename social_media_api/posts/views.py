@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from .serializers import CommentSerializer, PostSerializer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework import status
@@ -16,7 +16,7 @@ User = get_user_model()
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['title', 'content']
     search_fields = ['title', 'content']
@@ -77,8 +77,8 @@ class PostViewSet(viewsets.ModelViewSet):
             Response: A response with serialized post data and HTTP 200 status if posts exist,
               otherwise a message with HTTP 204 status indicating no posts found.
         """
-        followed_users = request.user.following.all()
-        posts = self.queryset.filter(author__in=followed_users)
+        following_users= request.user.following.all()
+        posts = Post.objects.filter(author__in=following_users).order_by
         
         if posts.exists():
              serializer = PostSerializer(instance=posts, many=True)
@@ -92,7 +92,7 @@ class PostViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [permissions.IsAuthenticated, IsOwner]
 
     def get_object(self):
         """
