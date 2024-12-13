@@ -10,9 +10,6 @@ urlpatterns = [
     
     # user profile management url paths
     path('profile/<username>', UserAPIView.as_view(), name='profile'),
-    # path('profile/<username>', UserAPIView.as_view({'put':'update'}), name='profile'),
-    # path('profile/<username>', UserAPIView.as_view({'patch':'partail_update'}), name='profile'),
-    # path('profile/<username>', UserAPIView.as_view({'delete':'destroy'}), name='profile'),
 
     # following url paths
     path('follow/<username>', FollowView.as_view(), name='follow'),

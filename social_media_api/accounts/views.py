@@ -1,6 +1,4 @@
-from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
 from rest_framework import permissions
-from rest_framework.viewsets import GenericViewSet
 from rest_framework import generics
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
