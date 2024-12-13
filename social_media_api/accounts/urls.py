@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import RegisterView, LoginView, LogoutView, UserAPIView
+from .views import RegisterView, LoginView, LogoutView, UserAPIView, FollowView
 
 
 urlpatterns = [
@@ -10,8 +10,12 @@ urlpatterns = [
     
     # user profile management url paths
     path('profile/<username>', UserAPIView.as_view({'get': 'retrieve'}), name='profile'),
-    path('profile/<username>', UserAPIView.as_view({'put': 'update'}), name='profile'),
-    path('profile/<username>', UserAPIView.as_view({'patch': 'partial_update'}), name='profile'),
-    path('profile/<username>', UserAPIView.as_view({'delete': 'destroy'}), name='profile'),
+    path('profile/<username>', UserAPIView.as_view({'put':'update'}), name='profile'),
+    path('profile/<username>', UserAPIView.as_view({'patch':'partail_update'}), name='profile'),
+    path('profile/<username>', UserAPIView.as_view({'delete':'destroy'}), name='profile'),
+
+    # following url paths
+    path('follow/<username>', FollowView.as_view({'post':'follow'}), name='follow'),
+    path('unfollow/<username>', FollowView.as_view({'delete':'unfollow'}), name='unfollow'),
 
 ]

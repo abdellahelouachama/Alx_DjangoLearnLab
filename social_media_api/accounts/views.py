@@ -5,6 +5,7 @@ from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from django.contrib.auth import authenticate
+from rest_framework.decorators import action
 from rest_framework.views import APIView
 from .serializers import UserSerializer
 from .permission import IsLoggedIn
@@ -117,7 +118,8 @@ class LogoutView(APIView):
 
 # user viewset to handle profile managment(reterive, update, delete)
 # note : user creation handled in RegisterView
-class UserAPIView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, GenericViewSet):
+class UserAPIView(GenericViewSet, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated, IsLoggedIn]
@@ -164,3 +166,70 @@ class UserAPIView(RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin, Gener
             instance: The user object to be deleted
         """
         instance.delete()
+
+# FollowView handle following and unfollowing custom  operations 
+class FollowView(GenericViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    lookup_field = 'username'
+    permission_classes = [IsAuthenticated]
+    
+    @action(methods=['POST'], detail=True, url_path='follow')
+    def follow(self, request, username=None):
+        """
+    Handle the follow operation for a user.
+
+    Allows a user to follow another user identified by the username.
+
+    Args:
+        request (Request): The request object containing the user information.
+        username (str): The username of the user to be followed.
+
+    Returns:
+        Response: A response indicating the success or failure of the follow operation.
+                  On success, returns a message with HTTP 200 status.
+                  On failure, returns an error message with HTTP 400 status.
+        """
+        try: 
+            followed_user = self.queryset.get(username=username)
+        except self.queryset.model.DoesNotExist as e:
+            return Response({'error': e}, status=status.HTTP_400_BAD_REQUEST)
+
+        if request.user == followed_user:
+            return Response({'error': "You can't follow yourself"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if request.user.following.filter(id=followed_user.id).exists():
+            return Response({'error': "You are already following this user"}, status=status.HTTP_400_BAD_REQUEST)    
+        
+        request.user.following.add(followed_user)
+        return Response({'message': 'Follow seccussful'}, status=status.HTTP_200_OK)
+    
+    @action(methods=['DELETE'], detail=True, url_path='unfollow')
+    def unfollow(self, request, username):
+        """
+    Handle the unfollow operation for a user.
+
+    Allows a user to unfollow another user identified by the username.
+
+    Args:
+        request (Request): The request object containing the user information.
+        username (str): The username of the user to be unfollowed.
+
+    Returns:
+        Response: A response indicating the success or failure of the unfollow operation.
+                  On success, returns a message with HTTP 200 status.
+                  On failure, returns an error message with HTTP 400 status.
+        """
+        try:
+            followed_user = self.queryset.get(username=username)
+        except self.queryset.model.DoesNotExist:
+                return Response({'error': "The specified user does not exist"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if request.user == followed_user:
+            return Response({'error': "You can't unfollow yourself because by default you can't follow yourself"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if not request.user.following.filter(id=followed_user.id).exists():
+            return Response({'error': "You don't follow this user"}, status=status.HTTP_400_BAD_REQUEST) 
+        
+        request.user.following.remove(followed_user.id)
+        return Response({'message': "Unfollow seccussful"}, status=status.HTTP_200_OK) 

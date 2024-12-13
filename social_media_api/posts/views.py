@@ -5,6 +5,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Comment, Post
+from rest_framework.decorators import action
 from .permissions import IsOwner
 from rest_framework.filters import SearchFilter
 from django.contrib.auth import get_user_model
@@ -60,6 +61,30 @@ class PostViewSet(viewsets.ModelViewSet):
             return Response({'message': 'Post creation successful'}, status=status.HTTP_201_CREATED)
         
         return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
+    @action(methods=['GET'], detail=False, url_path='feed')
+    def feed(self, request):
+        """
+        Retrieve and return posts from users that the authenticated user follows.
+
+        Returns a list of posts authored by users that the authenticated user follows.
+        If no posts are found, returns a message indicating no posts are available.
+
+        Args:
+            request (Request): The request object containing user authentication information.
+
+            Returns:
+            Response: A response with serialized post data and HTTP 200 status if posts exist,
+              otherwise a message with HTTP 204 status indicating no posts found.
+        """
+        followed_users = request.user.following.all()
+        posts = self.queryset.filter(author__in=followed_users)
+        
+        if posts.exists():
+             serializer = PostSerializer(instance=posts, many=True)
+             return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        return Response({'message': 'No posts found'}, status=status.HTTP_204_NO_CONTENT)
 
 
 # comment viewset to preform crud operations for the post it required authentication and 
@@ -97,8 +122,9 @@ class CommentViewSet(viewsets.ModelViewSet):
         author = request.user
         title = request.data.get('title')
         content = request.data.get('content')
+        post = request.data.get('post')
         
-        comment_data = {'author':author, 'title':title, 'content':content}
+        comment_data = {'author':author.id, 'title':title, 'content':content, 'post':post}
         serializer = CommentSerializer(data=comment_data)
 
         if serializer.is_valid():
@@ -106,3 +132,4 @@ class CommentViewSet(viewsets.ModelViewSet):
             return Response({'message': 'Comment creation successful'}, status=status.HTTP_201_CREATED)
         
         return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+

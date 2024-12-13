@@ -49,7 +49,7 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractUser):
     bio = models.TextField(max_length=1000, null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pictures', null=True, blank=True)
-    followers = models.ManyToManyField('self', symmetrical=False)
+    following = models.ManyToManyField('self', symmetrical=False, related_name='followers')
     
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS =  ['first_name', 'last_name']
