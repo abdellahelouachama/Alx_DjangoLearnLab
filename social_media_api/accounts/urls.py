@@ -17,5 +17,6 @@ urlpatterns = [
     # following url paths
     path('follow/<username>', FollowView.as_view({'post':'follow'}), name='follow'),
     path('unfollow/<username>', FollowView.as_view({'delete':'unfollow'}), name='unfollow'),
-
+    # "follow/<int:user_id>"
+    # "unfollow/<int:user_id>/"
 ]
