@@ -1,6 +1,7 @@
 from rest_framework.mixins import RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
 from rest_framework.viewsets import GenericViewSet
+from rest_framework import generics
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
@@ -10,6 +11,7 @@ from rest_framework.views import APIView
 from .serializers import UserSerializer
 from .permission import IsLoggedIn
 from rest_framework import status
+from .models import CustomUser
 User = get_user_model()
 
 # register view to handle user creation
@@ -96,7 +98,7 @@ class LoginView(APIView):
 
 # logout view to handle logout operation and token deletion
 class LogoutView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
         """
@@ -122,7 +124,7 @@ class UserAPIView(GenericViewSet, RetrieveModelMixin, UpdateModelMixin, DestroyM
 
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated, IsLoggedIn]
+    permission_classes = [permissions.IsAuthenticated, IsLoggedIn]
     lookup_field = 'username'
 
     def get_object(self):
@@ -168,11 +170,11 @@ class UserAPIView(GenericViewSet, RetrieveModelMixin, UpdateModelMixin, DestroyM
         instance.delete()
 
 # FollowView handle following and unfollowing custom  operations 
-class FollowView(GenericViewSet):
-    queryset = User.objects.all()
+class FollowView(generics.GenericAPIView):
+    queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     lookup_field = 'username'
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     
     @action(methods=['POST'], detail=True, url_path='follow')
     def follow(self, request, username=None):
