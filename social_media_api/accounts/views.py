@@ -170,6 +170,7 @@ class UserAPIView(RetrieveUpdateDestroyAPIView):
         instance.delete()
 
 # FollowView handle following and unfollowing custom  operations 
+# generics.CreateAPIView
 class FollowView(GenericViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
