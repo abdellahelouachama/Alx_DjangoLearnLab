@@ -12,6 +12,7 @@ from rest_framework import status
 from .models import CustomUser
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
 from rest_framework.viewsets import GenericViewSet
+from notifications.views import generating_notification
 User = get_user_model()
 
 # register view to handle user creation
@@ -203,6 +204,8 @@ class FollowView(generics.GenericAPIView):
             return Response({'error': "You are already following this user"}, status=status.HTTP_400_BAD_REQUEST)    
         
         request.user.following.add(followed_user)
+        
+        generating_notification(User, followed_user, request.user, followed_user.id)
         return Response({'message': 'Follow seccussful'}, status=status.HTTP_200_OK)
     
     @action(methods=['DELETE'], detail=True, url_path='unfollow')
