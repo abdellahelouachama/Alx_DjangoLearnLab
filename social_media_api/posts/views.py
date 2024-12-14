@@ -93,17 +93,17 @@ class PostViewSet(viewsets.ModelViewSet):
         post = self.get_object()
         
         # check if the user already liked the post
-        if not Like.objects.filter(user=user, post=post).exists():
-            like = Like.objects.get_or_create(user=request.user, post=post)  
+        if not Like.objects.filter(user=request.user, post=post).exists():
+            like = Like.objects.create(user=request.user, post=post)  
             
             # it call generating_notification to create notifications for the post author 
-            generating_notification(Like, post.author, user, like.id)
+            generating_notification(Like, post.author, request.user, like)
             return Response({'message': 'Liked successfully'}, status=status.HTTP_200_OK)
         
         else:
             return Response({'error': 'You already liked this post'}, status=status.HTTP_400_BAD_REQUEST)
     
-    @action(methods=['DELETE'], detail=True, url_path='nulike')
+    @action(methods=['DELETE'], detail=True, url_path='unlike')
     def unlike(self, request, pk=None):
         post = self.get_object()
         user = request.user
@@ -168,3 +168,4 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 # generics.get_object_or_404(Post, pk=pk)
 # Notification.objects.create
+# Like.objects.get_or_create(user=request.user, post=post)

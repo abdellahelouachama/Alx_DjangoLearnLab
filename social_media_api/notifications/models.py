@@ -10,6 +10,6 @@ class Notification(models.Model):
     recipient = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipient')
     actor = models.ForeignKey(User, on_delete=models.CASCADE, related_name='actor')
     verb = models.TextField(max_length=300)
-    target = models.PositiveIntegerField(max_length=50)
+    target = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'target')
     timestamp = models.DateTimeField(auto_now_add=True)
