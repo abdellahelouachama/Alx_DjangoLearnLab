@@ -170,8 +170,8 @@ class UserAPIView(RetrieveUpdateDestroyAPIView):
         instance.delete()
 
 # FollowView handle following and unfollowing custom  operations 
-# generics.CreateAPIView
-class FollowView(generics.CreateAPIView, GenericViewSet):
+# note: when I am about to run the api switch from generics.CreateAPIView to GenericViewSet
+class FollowView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     lookup_field = 'username'
@@ -239,4 +239,3 @@ class FollowView(generics.CreateAPIView, GenericViewSet):
         request.user.following.remove(followed_user.id)
         return Response({'message': "Unfollow seccussful"}, status=status.HTTP_200_OK) 
     
-# generics.CreateAPIView
