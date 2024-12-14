@@ -1,16 +1,16 @@
-from rest_framework import viewsets
-from .serializers import CommentSerializer, PostSerializer
-from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend
+from .serializers import CommentSerializer, PostSerializer
+from notifications.views import generating_notification
+from rest_framework.filters import SearchFilter
+from django.contrib.auth import get_user_model
+from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import permissions
+from rest_framework import viewsets
 from rest_framework import status
 from .models import Comment, Post
-from rest_framework.decorators import action
 from .permissions import IsAuthor
-from rest_framework.filters import SearchFilter
 from .models import Like
-from notifications.views import generating_notification
-from django.contrib.auth import get_user_model
 User = get_user_model()
 
 # post viewset to preform crud operations for the post it required authentication 
@@ -93,15 +93,15 @@ class PostViewSet(viewsets.ModelViewSet):
         post = self.get_object()
         
         # check if the user already liked the post
-        if not Like.objects.filter(user=request.user, post=post).exists():
-            like = Like.objects.create(user=request.user, post=post)  
-            
-            # it call generating_notification to create notifications for the post author 
-            generating_notification(Like, post.author, request.user, like)
-            return Response({'message': 'Liked successfully'}, status=status.HTTP_200_OK)
-        
-        else:
+        if Like.objects.filter(user=request.user, post=post).exists():           
             return Response({'error': 'You already liked this post'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # creating like instance
+        like = Like.objects.create(user=request.user, post=post)       
+
+        # it call generating_notification to create notifications for the post author         
+        generating_notification(Like, post.author, request.user, like.id)
+        return Response({'message': 'Liked successfully'}, status=status.HTTP_200_OK)
     
     @action(methods=['DELETE'], detail=True, url_path='unlike')
     def unlike(self, request, pk=None):
@@ -115,7 +115,7 @@ class PostViewSet(viewsets.ModelViewSet):
             return Response({'message':'Unlike successful'}, status=status.HTTP_200_OK)
         
         except Like.DoesNotExist:
-            return Response({'error':"You didn't like this post."}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error':"You didn't like this post before."}, status=status.HTTP_404_NOT_FOUND)
         
 # comment viewset to preform crud operations for the post it required authentication and 
 # the the authenticated user to be the auther od comment for object level actions
@@ -154,12 +154,15 @@ class CommentViewSet(viewsets.ModelViewSet):
         content = request.data.get('content')
         post = request.data.get('post')
         
+        
         comment_data = {'author':author.id, 'content':content, 'post':post}
         serializer = CommentSerializer(data=comment_data)
 
         if serializer.is_valid():
             
             comment = serializer.save()
+            
+            post = Post.objects.get(id=post)
             generating_notification(Comment, post.author, author, comment.id)
             return Response({'message': 'Comment creation successful'}, status=status.HTTP_201_CREATED)
         

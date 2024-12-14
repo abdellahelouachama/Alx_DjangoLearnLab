@@ -12,7 +12,7 @@ class IsAuthor(BasePermission):
         :param obj: The object to check permission against
         :return: True if permission is granted, False otherwise
         """
-        if request.method in ['PUT', 'DELETE', 'PATCH']:
+        if request.method in ['PUT', 'DELETE', 'PATCH'] and view.action in ['update', 'partial update', 'delete']:
             if request.user == obj.author:
                 return True
             else:
