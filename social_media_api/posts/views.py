@@ -91,11 +91,10 @@ class PostViewSet(viewsets.ModelViewSet):
     @action(methods=['POST'], detail=True, url_path='like')
     def like(self, request, pk=None):
         post = self.get_object()
-        user = request.user
         
         # check if the user already liked the post
         if not Like.objects.filter(user=user, post=post).exists():
-            like = Like.objects.create(user=user, post=post)    
+            like = Like.objects.get_or_create(user=request.user, post=post)  
             
             # it call generating_notification to create notifications for the post author 
             generating_notification(Like, post.author, user, like.id)
@@ -166,3 +165,6 @@ class CommentViewSet(viewsets.ModelViewSet):
         
         return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
+
+# generics.get_object_or_404(Post, pk=pk)
+# Notification.objects.create
