@@ -171,7 +171,7 @@ class UserAPIView(RetrieveUpdateDestroyAPIView):
 
 # FollowView handle following and unfollowing custom  operations 
 # note: when I am about to run the api switch from generics.CreateAPIView to GenericViewSet
-class FollowView(generics.CreateAPIView):
+class FollowView(generics.GenericAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     lookup_field = 'username'
