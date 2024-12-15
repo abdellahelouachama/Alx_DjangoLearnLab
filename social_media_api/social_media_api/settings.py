@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6u7d=p7e!9-0h!f*$xgt+1$hy9f^q6p7x$#@te6gqc#q)n&ay7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['abdellah elouachama.pythonanywhere.com']
 
 
 # Application definition
@@ -135,3 +135,28 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10
 }
+
+### security settings : 
+
+# protect application from Cross-Site Scripting (XSS) attacks
+SECURE_BROWSER_XSS_FILTER = True
+
+# protect application from clickjacking attacks.
+X_FRAME_OPTIONS = 'DENY'
+
+# protect application from MIME type sniffing attacks
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# HTTP requests are redirected to HTTPS for secure communications 
+SECURE_SSL_REDIRECT = True
+
+### Manage Static Files and Databases : 
+ 
+# static files settings
+STATIC_URL = '/static/'  # URL to serve static files from
+STATIC_ROOT = '/home/abdellah el ouachama/social_media_api/staticfiles'  # Absolute path to the directory where static files will be collected
+
+
+# Media files (uploaded by users, such as profile pictures)
+MEDIA_URL = '/media/'  # URL used to access media files (e.g., /media/profile_pics/username.jpg)
+MEDIA_ROOT = '/home/yourusername/myproject/media/'  # Directory where media files (profile pictures) will be stored

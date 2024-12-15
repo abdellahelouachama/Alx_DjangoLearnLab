@@ -177,7 +177,7 @@ class FollowView(generics.GenericAPIView):
     lookup_field = 'username'
     permission_classes = [permissions.IsAuthenticated]
     
-    @action(methods=['POST'], detail=True, url_path='follow')
+    @action(methods=['POST'], detail=True, url_path='folllow')    
     def follow(self, request, username=None):
         """
     Handle the follow operation for a user.
@@ -209,7 +209,7 @@ class FollowView(generics.GenericAPIView):
         generating_notification(User, followed_user, request.user, followed_user.id)
         return Response({'message': 'Follow seccussful'}, status=status.HTTP_200_OK)
     
-    @action(methods=['DELETE'], detail=True, url_path='unfollow')
+    @action(methods=['DELETE'], detail=True, url_path='unfolllow')    
     def unfollow(self, request, username):
         """
     Handle the unfollow operation for a user.

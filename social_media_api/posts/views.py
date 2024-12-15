@@ -38,6 +38,24 @@ class PostViewSet(viewsets.ModelViewSet):
         self.check_object_permissions(self.request, obj)
         return obj
     
+    def update(self, request, *args, **kwargs):    
+        # Get the partial update flag (to handle PATCH and PUT properly)
+        partial = kwargs.pop('partial', False)
+
+        # Get the instance to be updated
+        instance = self.get_object()
+
+        # Modify the request data to include the logged-in user as the author if not provided
+        data = request.data.copy()  # Copy the data to make it mutable
+        if 'author' not in data or not data['author']:
+            data['author'] = request.user.id  # Use the logged-in user's ID
+
+        # Deserialize and validate the data
+        serializer = self.get_serializer(instance, data=data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data, status=status.HTTP_200_OK) 
+    
     def create(self, request, *args, **kwargs):
         """
     Handle the creation of a new post.
@@ -82,9 +100,9 @@ class PostViewSet(viewsets.ModelViewSet):
         following_users= request.user.following.all()
         posts = Post.objects.filter(author__in=following_users).order_by
         
-        if posts.exists():
-             serializer = PostSerializer(instance=posts, many=True)
-             return Response(serializer.data, status=status.HTTP_200_OK)
+        if Post.objects.filter(author__in=following_users).exists():
+            serializer = PostSerializer(instance=posts, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         
         return Response({'message': 'No posts found'}, status=status.HTTP_204_NO_CONTENT)
      
@@ -137,6 +155,24 @@ class CommentViewSet(viewsets.ModelViewSet):
         self.check_object_permissions(self.request, obj)
         return obj
     
+    def update(self, request, *args, **kwargs):    
+        # Get the partial update flag (to handle PATCH and PUT properly)
+        partial = kwargs.pop('partial', False)
+
+        # Get the instance to be updated
+        instance = self.get_object()
+
+        # Modify the request data to include the logged-in user as the author if not provided
+        data = request.data.copy()  # Copy the data to make it mutable
+        if 'author' not in data or not data['author']:
+            data['author'] = request.user.id  # Use the logged-in user's ID
+
+        # Deserialize and validate the data
+        serializer = self.get_serializer(instance, data=data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(serializer.data, status=status.HTTP_200_OK) 
     def create(self, request, *args, **kwargs):
         """
     Handle the creation of a new comment.

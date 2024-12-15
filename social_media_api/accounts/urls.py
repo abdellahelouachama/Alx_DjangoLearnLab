@@ -11,7 +11,7 @@ urlpatterns = [
     # user profile management url paths
     path('profile/<username>', UserAPIView.as_view(), name='profile'),
 
-    # following url paths
+    # url paths following system
     path('follow/<username>', FollowView.as_view(), name='follow'),
     path('unfollow/<username>', FollowView.as_view(), name='unfollow'),
     # "follow/<int:user_id>"             # {'post':'follow'}
